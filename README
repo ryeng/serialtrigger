@@ -1,0 +1,7 @@
+Serialtrigger listens to modem status line changes on a serial port and
+executes commands when they change status.
+
+Serialtrigger makes a blocking call to watch changes to the CTS, DCD,
+DSR and RI status lines. When a line is brought high, a user defined
+command is executed or the program exits. Different actions can be
+defined for each line.
