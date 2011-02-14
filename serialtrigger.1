@@ -1,0 +1,120 @@
+.TH SERIALTRIGGER 1 "2011-02-14"
+.SH NAME
+serialtrigger \- execute commands on modem status line changes
+.SH SYNOPSIS
+\fBserialtrigger
+.RB [\fB\-a
+.IR command\fP]
+.RB [\fB\-c
+.IR command\fP]
+.RB [\fB\-i
+.IR command\fP]
+.RB [\fB\-s
+.IR command\fP]
+.RB [\fB\-ACIS\fP]
+.RB [\fB\-dDrR\fP]
+.RB [\fB\-o\fP]
+.RB [\fB\-w
+.IR time\fP]
+.I device
+.br
+\fBserialtrigger
+.RB [\fB\-hvV\fP]
+.RB [\fB\-\-pinout\fP]
+.SH DESCRIPTION
+.B Serialtrigger
+listens to changes in the serial port modem status register (MSR) and
+executes commands on clear to send (CTS), data carrier detect (DCD),
+data set ready (DSR) and ring indicator (RI) signals. Each signal
+triggers a different command. Options are also provided to exit on a
+given signal. All commands are executed before exit events.
+.PP
+The data terminal ready (DTR) and ready to send (RTS) lines can be
+brought high to power an external circuit.
+.PP
+When a signal is triggered, \fBserialtrigger\fP waits a set time and
+then re\-tests the MSR. Commands and exit actions are only take if the
+given signal is still high when the MSR is re\-tested.
+.SH OPTIONS
+.SS "Action options"
+.TP
+.B \-a \fIcommand\fP, \-\-dcd\-exec=\fIcommand
+Execute command on data carrier detect (DCD).
+.TP
+.B \-A, \-\-dcd\-exit
+Exit on data carrier detect (DCD).
+.TP
+.B \-c \fIcommand\fP, \-\-cts\-exec=\fIcommand
+Execute command on clear to send (CTS)
+.TP
+.B \-C, \-\-cts\-exit
+Exit on clear to send (CTS).
+.TP
+.B \-i \fIcommand\fP, \-\-ri\-exec=\fIcommand
+Execute command on ring indicator (RI).
+.TP
+.B \-I, \-\-ri\-exit
+Exit on ring indicator (RI)
+.TP
+.B \-s \fIcommand\fP, \-\-dsr\-exec=\fIcommand
+Execute command on data set ready (DSR).
+.TP
+.B \-S, \-\-dsr\-exit
+Exit on data set ready (DSR).
+.SS "Output signal options"
+.TP
+.B \-d, \-\-dtr
+Set data terminal ready (DTR).
+.TP
+.B \-D, \-\-clear\-dtr
+Clear data terminal ready (DTR) while executing commands.
+.TP
+.B \-r, \-\-rts
+Set ready to send (RTS).
+.TP
+.B \-R, \-\-clear\-rts
+Clear ready to send (RTS) while executing commands.
+.SS "Control options"
+.TP
+.B \-o, \-\-once
+Exit after executing command once.
+.TP
+.B \-w \fItime\fP, \-\-retest\-wait=\fItime
+Wait
+.I time
+microseconds after first trigger and retest. Only execute commands if
+signal is also triggered on second test.
+.SS "Help and debug options"
+.TP
+.B \-h, \-\-help
+Display help text.
+.TP
+.B \-\-pinout
+Display DB-25 and DE-9 pinout.
+.TP
+.B \-v, \-\-verbose
+Increase verbosity level. Repeat this option to increase verbosity
+further.
+.TP
+.B \-V, \-\-version
+Show version information
+.SH "EXIT STATUS"
+.TP
+.B 0
+Successful program execution.
+.TP
+.B 1
+Something went wrong.
+.SH EXAMPLES
+.IP "\fBserialtrigger -a 'echo DCD' /dev/ttyS0"
+Display text when DCD is triggered.
+.IP "\fBserialtrigger -dr -a 'echo DCD' -c 'echo CTS' -I /dev/ttyS0"
+Set DTR and RTS high and display text when DCD or CTS is triggered. Exit
+on RI.
+.IP "\fBserialtrigger -dr -a 'echo DCD; echo DCD > logfile' /dev/ttyS0"
+Set DTR and RTS high and display text and write to file when DCD is
+triggered.
+.SH AUTHOR
+Copyright 2008, 2011 by Norvald H. Ryeng <norvald@ryeng.name>.
+.PP
+Licenced under the GNU GPL.
